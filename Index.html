@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Iberdrola × Aptics — Avonlie Solar Farm</title>
+<meta name="description" content="Autonomous under-panel vegetation management and thermal inspection for Avonlie Solar Farm, NSW — a 5 MWp pilot block, fire risk first.">
+<style>
+:root{
+  --ink:#0c1110; --paper:#fafaf9; --white:#ffffff;
+  --mute:#6e7a77; --faint:#9aa5a2; --hair:#e6e9e8;
+  --teal:#0fa88f; --teal-deep:#0a7a68;
+  --dark:#0c1110; --dark2:#101716; --dark-mute:#8b9793; --dark-hair:rgba(255,255,255,.09);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif;background:var(--paper);color:var(--ink);
+     -webkit-font-smoothing:antialiased;line-height:1.55}
+.hidden{display:none!important}
+.wrap{max-width:1120px;margin:0 auto;padding:0 40px;position:relative;z-index:2}
+section{padding:108px 0}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);margin-bottom:26px}
+h1,h2{letter-spacing:-.026em;font-weight:600;line-height:1.08}
+h2{font-size:clamp(30px,3.6vw,46px);max-width:840px}
+h2 .q{display:block;color:var(--teal-deep)}
+.dark h2 .q{color:var(--teal)}
+.lede{font-size:clamp(18px,2vw,22px);color:var(--mute);font-weight:420;letter-spacing:-.01em;max-width:700px;margin-top:26px}
+.dark{background:var(--dark);color:#f4f6f5}
+.dark .lede{color:var(--dark-mute)}
+.dark h2{color:#f4f6f5}
+.rv{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+.rv.in{opacity:1;transform:none}
+
+/* gate */
+#gate{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;
+      background:radial-gradient(1200px 600px at 78% -10%,rgba(15,168,143,.14),transparent 60%),var(--dark)}
+.gatecard{width:min(400px,92vw);text-align:left;color:#f4f6f5}
+.gatecard .gm{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--dark-mute);margin-bottom:34px}
+.gatecard h3{font-size:26px;font-weight:600;letter-spacing:-.02em}
+.gatecard p{margin-top:12px;font-size:14.5px;color:var(--dark-mute)}
+.gatecard label{display:block;margin:26px 0 8px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dark-mute)}
+.gatecard input{width:100%;padding:14px 16px;border-radius:12px;border:1px solid var(--dark-hair);
+                background:rgba(255,255,255,.04);color:#f4f6f5;font-size:15px;outline:none}
+.gatecard input:focus{border-color:var(--teal)}
+.gatecard button{width:100%;margin-top:26px;padding:15px;border:0;border-radius:999px;cursor:pointer;
+                 background:var(--teal);color:#04211c;font-weight:640;font-size:15px}
+.gatemsg{margin-top:14px;font-size:13px;min-height:18px;color:#f87171}
+
+/* logo watermark — fixed, constant through the scroll */
+#mark{position:fixed;inset:0;z-index:1;pointer-events:none;display:flex;align-items:center;justify-content:center}
+#mark svg{width:min(84vw,1120px);aspect-ratio:1000/834.9;height:auto;opacity:.075;
+          fill:none;stroke:var(--teal);stroke-width:6.5;stroke-linejoin:round;stroke-linecap:round}
+
+/* nav */
+#nav{position:fixed;top:0;left:0;right:0;z-index:40;padding:16px 0;opacity:0;pointer-events:none;
+     transition:opacity .35s ease;background:rgba(12,17,16,.86);backdrop-filter:blur(10px);
+     border-bottom:1px solid var(--dark-hair)}
+#nav.on{opacity:1;pointer-events:auto}
+#nav .wrap{display:flex;justify-content:space-between;align-items:center}
+#nav b{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#f4f6f5;font-weight:600}
+#nav a{font-size:13px;color:var(--teal);text-decoration:none;font-weight:560}
+
+/* hero */
+.hero{background:radial-gradient(1100px 640px at 78% -14%,rgba(15,168,143,.16),transparent 62%),var(--dark);
+      color:#f4f6f5;padding:126px 0 0}
+.hero .mark{font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--dark-mute);margin-bottom:44px}
+.hero h1{font-size:clamp(42px,6.2vw,88px)}
+.hero h1 .turn{display:block;color:var(--teal);margin-top:.1em}
+.hero .sub{margin-top:34px;font-size:19px;color:var(--dark-mute);max-width:640px;font-weight:420;padding-bottom:90px}
+
+.band{border-top:1px solid var(--dark-hair);background:var(--dark2);display:grid;grid-template-columns:repeat(5,1fr);
+      position:relative;z-index:2}
+.band .cell{padding:40px 16px 36px;text-align:center;border-right:1px solid var(--dark-hair)}
+.band .cell:last-child{border-right:none}
+.band .v{font-size:clamp(20px,2.5vw,31px);font-weight:600;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.band .lbl{margin-top:8px;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dark-mute);line-height:1.5}
+
+/* numbered rows */
+.rows{margin-top:66px;border-top:1px solid var(--hair)}
+.rowitem{display:grid;grid-template-columns:74px 1fr 1.14fr;gap:34px;align-items:baseline;
+         padding:42px 0;border-bottom:1px solid var(--hair)}
+.rowitem .no{font-size:14px;color:var(--faint);font-variant-numeric:tabular-nums;font-weight:600}
+.rowitem h3{font-size:20px;font-weight:600;letter-spacing:-.015em}
+.rowitem p{font-size:16.5px;color:var(--mute)}
+.rowitem p b{color:var(--ink);font-weight:600}
+.dark .rows,.dark .rowitem{border-color:var(--dark-hair)}
+.dark .rowitem p{color:var(--dark-mute)}
+.dark .rowitem p b{color:#f4f6f5}
+
+.pull{margin-top:58px;font-size:clamp(21px,2.5vw,30px);font-weight:500;letter-spacing:-.02em;max-width:880px;line-height:1.3}
+.pull em{color:var(--teal-deep);font-style:normal}
+.dark .pull em{color:var(--teal)}
+
+/* figures */
+.figgrid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:62px}
+.figgrid figure{background:var(--dark2);border:1px solid var(--dark-hair);border-radius:14px;overflow:hidden}
+.figgrid figure.wide{grid-column:1/-1}
+.figgrid img{display:block;width:100%;height:320px;object-fit:cover;background:#16201e}
+.figgrid figure.wide img{height:420px}
+.figgrid figcaption{padding:18px 22px 20px;font-size:14px;color:var(--dark-mute);line-height:1.5}
+.figgrid figcaption b{display:block;color:#e8efed;font-weight:600;font-size:11px;letter-spacing:.16em;
+                      text-transform:uppercase;margin-bottom:6px}
+.illus{margin-top:18px;font-size:12.5px;color:var(--dark-mute)}
+
+/* specs */
+.specs{display:grid;grid-template-columns:repeat(3,1fr);margin-top:64px;border-top:1px solid var(--dark-hair)}
+.spec{padding:28px 26px 26px 0;border-bottom:1px solid var(--dark-hair)}
+.spec .k{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dark-mute);margin-bottom:8px}
+.spec .v{font-size:20px;font-weight:600;letter-spacing:-.02em;color:#f4f6f5}
+.spec .s{margin-top:6px;font-size:13.5px;color:var(--dark-mute);line-height:1.5}
+
+/* calculator */
+.calc{display:grid;grid-template-columns:1.25fr 1fr;gap:70px;margin-top:62px;align-items:start}
+.bignum{font-size:clamp(44px,6.4vw,86px);font-weight:600;letter-spacing:-.04em;line-height:1;
+        background:linear-gradient(92deg,#eafff9 20%,#4fd8bf 85%);-webkit-background-clip:text;
+        background-clip:text;color:transparent}
+.bigsub{margin-top:12px;font-size:18px;color:var(--dark-mute)}
+.bigsub b{color:#e8efed;font-weight:560}
+.subrow{display:flex;margin-top:52px;border-top:1px solid var(--dark-hair)}
+.subrow .cell{flex:1;padding:24px 8px 0;border-right:1px solid var(--dark-hair)}
+.subrow .cell:last-child{border-right:none}
+.subrow .n{font-size:21px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.subrow .k{margin-top:5px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dark-mute)}
+.sl label{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dark-mute);margin-bottom:4px}
+.sl output{display:block;font-size:20px;font-weight:600;letter-spacing:-.015em;margin-bottom:14px;
+           font-variant-numeric:tabular-nums;color:#f4f6f5}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:2px;border-radius:1px;
+                  background:rgba(255,255,255,.16);outline:none;margin-bottom:30px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;
+                  background:#fff;cursor:pointer}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border:none;border-radius:50%;background:#fff;cursor:pointer}
+.prov{margin-top:56px;font-size:13.5px;color:var(--dark-mute);max-width:700px;line-height:1.65}
+.prov b{color:#cfd9d6;font-weight:560}
+.livechip{display:inline-flex;align-items:center;gap:8px;margin-bottom:26px;font-size:12px;letter-spacing:.1em;
+          text-transform:uppercase;color:var(--dark-mute)}
+.livechip i{width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 10px var(--teal)}
+
+/* portfolio */
+.folio{margin-top:70px;border-top:1px solid var(--hair)}
+.frow{display:grid;grid-template-columns:1fr 110px 74px 1.5fr;gap:24px;align-items:baseline;
+      padding:22px 0;border-bottom:1px solid var(--hair)}
+.frow.hd{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);padding:14px 0}
+.frow .nm{font-weight:560}
+.frow .no{color:var(--mute);font-size:14.5px;font-variant-numeric:tabular-nums}
+.frow .st{color:var(--mute);font-size:14.5px}
+.frow.this .nm{color:var(--teal-deep)}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);margin-top:76px;border-top:1px solid var(--hair)}
+.step{padding:36px 30px 0 0;border-right:1px solid var(--hair)}
+.step:last-child{border-right:none}
+.step .n{font-size:13px;color:var(--faint);font-variant-numeric:tabular-nums}
+.step h3{margin-top:12px;font-size:17.5px;font-weight:600;letter-spacing:-.015em}
+.step p{margin-top:10px;font-size:14.5px;color:var(--mute)}
+
+/* close */
+.close{background:radial-gradient(1000px 520px at 20% -20%,rgba(15,168,143,.13),transparent 62%),var(--dark);padding:118px 0}
+.close h2{font-size:clamp(32px,4.4vw,58px)}
+.close .when{margin-top:26px;font-size:17px;color:var(--dark-mute);max-width:640px}
+.close .when b{color:#f4f6f5;font-weight:560}
+.cta{display:inline-block;margin-top:42px;padding:16px 34px;border-radius:999px;background:var(--teal);
+     color:#04211c;font-weight:640;font-size:15px;text-decoration:none}
+
+footer{background:var(--dark);color:var(--dark-mute);font-size:12px;padding:0 0 58px}
+footer .wrap{border-top:1px solid var(--dark-hair);padding-top:30px}
+footer p{max-width:880px;line-height:1.7}
+
+@media(max-width:900px){
+  .wrap{padding:0 24px} section{padding:72px 0}
+  .band{grid-template-columns:repeat(2,1fr)}
+  .band .cell{border-bottom:1px solid var(--dark-hair)}
+  .rowitem{grid-template-columns:1fr;gap:10px}
+  .specs,.figgrid,.calc{grid-template-columns:1fr;gap:34px}
+  .figgrid figure.wide img{height:300px}
+  .spec{padding-right:0}
+  .steps{grid-template-columns:1fr}
+  .step{border-right:none;border-bottom:1px solid var(--hair);padding:30px 0}
+  .frow{grid-template-columns:1fr 80px;gap:12px}
+  .frow .st{grid-column:1/-1}
+}
+</style>
+</head>
+<body>
+
+<!-- GATE -->
+<div id="gate">
+  <div class="gatecard">
+    <div class="gm">Iberdrola × Aptics</div>
+    <h3>Avonlie Solar Farm. A working proposal.</h3>
+    <p>Enter your work email — your access code fills in automatically.</p>
+    <label for="g-email">Work email</label>
+    <input id="g-email" type="email" autocomplete="email" placeholder="name@iberdrola.com.au">
+    <label for="g-key">Access key</label>
+    <input id="g-key" type="text" placeholder="AVLSF-••••" autocapitalize="characters">
+    <button id="g-go">Open the proposal</button>
+    <div class="gatemsg" id="g-msg"></div>
+  </div>
+</div>
+
+<div id="page" class="hidden">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="alogo" viewBox="0 0 1000.0 834.9"><path d="M 453.7,509.0 L 639.4,509.0 L 560.5,321.5 L 498.6,176.5 L 426.9,345.3 L 289.9,675.2 L 234.8,810.5 L 233.0,814.5 L 219.3,828.8 L 200.5,834.9 L 196.2,834.9 L 0.0,834.7 L 117.5,577.5 L 191.9,413.9 L 245.1,295.5 L 362.9,32.1 L 364.3,28.9 L 369.8,20.0 L 379.1,9.8 L 390.7,2.7 L 401.1,0.1 L 404.5,0.1 L 591.7,0.0 L 594.7,0.0 L 603.4,1.8 L 614.2,6.7 L 623.3,14.3 L 628.6,21.4 L 629.8,24.0 L 659.0,86.8 L 761.5,311.1 L 822.8,445.6 L 931.2,683.1 L 1000.0,833.2 L 1000.0,833.4 L 998.6,834.7 L 998.3,834.8 L 798.7,834.8 L 795.8,834.6 L 787.3,833.0 L 776.9,828.6 L 768.2,821.5 L 763.1,814.4 L 762.1,811.7 L 705.6,673.4 L 385.5,673.4 L 420.9,588.4 L 453.7,509.0 Z"/></symbol>
+</svg>
+
+<div id="mark" aria-hidden="true"><svg><use href="#alogo"/></svg></div>
+
+<div id="nav"><div class="wrap"><b>Iberdrola × Aptics · Avonlie</b><a href="#close">Talk to us</a></div></div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <div class="mark">Iberdrola × Aptics &nbsp;·&nbsp; Avonlie Solar Farm · October 2026</div>
+    <h1>Cut the fuel.<span class="turn">Find the spark.</span></h1>
+    <p class="sub">Fire risk, not yield, is what drives the vegetation program at Avonlie — and the fire danger
+       period opened on 1 October. The same machine that holds the grass at your height under the panels can read
+       every string while it is there. One pass, two records, starting on a single 5&nbsp;MWp block.</p>
+  </div>
+  <div class="band">
+    <div class="cell"><div class="v"><span data-count="254" data-suffix=" MWp">0</span></div><div class="lbl">Avonlie · DC capacity on the register</div></div>
+    <div class="cell"><div class="v"><span data-count="245" data-suffix=" MWp">0</span></div><div class="lbl">DC capacity, owner / EPC figure</div></div>
+    <div class="cell"><div class="v"><span data-count="455868">0</span></div><div class="lbl">Modules on single-axis trackers</div></div>
+    <div class="cell"><div class="v"><span data-count="580" data-suffix=" ha">0</span></div><div class="lbl">Approx. site area · 1,400 acres</div></div>
+    <div class="cell"><div class="v"><span data-count="5" data-suffix=" MWp">0</span></div><div class="lbl">Proposed pilot block · DC</div></div>
+  </div>
+  <div class="wrap" style="padding-top:72px;padding-bottom:90px">
+    <div style="max-width:860px;margin:0 auto"><div style="position: relative; padding-bottom: 56.25%; height: 0;"><iframe src="https://www.loom.com/embed/4a507e1e23ad40ddba2cea0fb5671a9b" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div></div>
+  </div>
+</header>
+
+<!-- 01 WHERE THIS STARTS -->
+<section class="dark">
+  <div class="wrap rv">
+    <div class="eyebrow">Where this starts</div>
+    <h2>Two risks sit under the same panels.<span class="q">We deal with both on one traverse.</span></h2>
+
+    <div class="rows">
+      <div class="rowitem"><div class="no">01</div>
+        <div><h3>Fuel the usual controls don't reach</h3></div>
+        <p>As we understood it on 24&nbsp;August, <b>Cape weed and barley grass</b> resist the herbicide options,
+           and barley-grass seed blinds the sheep, so they come off site. That leaves ride-on mowing in a narrow
+           window. A machine that runs continuously holds grass at your specified height through the season
+           instead of letting it climb between visits — <b>a flat vegetation profile, not a sawtooth.</b></p></div>
+
+      <div class="rowitem"><div class="no">02</div>
+        <div><h3>A thermal cadence that matches the season</h3></div>
+        <p>Annual drone thermography — valuable, but it cannot see the
+           <b>underside of the array</b>, and a fault that develops after the flight can sit for months. A hot
+           joint over dry ground is the failure that SCADA does not flag until it is already an incident.
+           Under-panel passes close that gap.</p></div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- 02 THE MACHINE -->
+<section>
+  <div class="wrap rv">
+    <div class="eyebrow">The machine</div>
+    <h2>One chassis. It mows, and it sees.</h2>
+    <p class="lede">Every pass is also a thermal and visual inspection of everything below the panel — the layer
+       no drone or drive-by sees. These frames are from Aptics deployments elsewhere, not from Avonlie.</p>
+  </div>
+</section>
+
+<section class="dark" style="padding-top:0">
+  <div class="wrap rv">
+    <div class="eyebrow">What every pass records</div>
+    <h2>Thermal and visual evidence from underneath the panel.</h2>
+    <div class="figgrid">
+      <figure class="wide">
+        <img src="unit-onsite.jpg" alt="Aptics tracked ground unit on grass beside a solar array at a previous deployment">
+        <figcaption><b>The unit · on site</b>The Aptics ground unit working beside a solar array at an earlier
+          deployment. Tracked configurations are available for soft ground.</figcaption>
+      </figure>
+      <figure>
+        <img src="thermal-01.png" alt="Radiometric thermal image of electrical terminations with hot components flagged by detection boxes">
+        <figcaption><b>Radiometric thermal · terminations</b>Cable terminations running hot, boxed
+          automatically on a routine pass. Logged against the string — before it becomes an outage.</figcaption>
+      </figure>
+      <figure>
+        <img src="thermal-02.png" alt="Close radiometric thermal view of two hot terminations with detection boxes">
+        <figcaption><b>Radiometric thermal · close pass</b>The same class of fault up close. Tracked between
+          passes, so a warm joint that is getting warmer never goes unnoticed.</figcaption>
+      </figure>
+      <figure>
+        <img src="mc4-01.png" alt="Under-panel greyscale view with two MC4 connectors identified and highlighted">
+        <figcaption><b>Visual · MC4 connectors</b>Two connectors identified from below by the on-board
+          model — a view drones and walk-downs never get.</figcaption>
+      </figure>
+      <figure>
+        <img src="mc4-04.png" alt="Under-panel greyscale view with a single MC4 connector identified mid-row">
+        <figcaption><b>Visual · mid-row</b>A single connector picked out mid-row. Left alone, this is how
+          strings quietly stop earning.</figcaption>
+      </figure>
+    </div>
+    <p class="illus">All imagery is illustrative and from Aptics work elsewhere. We have not yet visited Avonlie and
+       make no statement about the condition of the site.</p>
+
+    <div class="specs">
+      <div class="spec"><div class="k">Footprint</div><div class="v">1,320 × 920 × 450 mm</div>
+        <div class="s">Runs the full row, under the leading edge</div></div>
+      <div class="spec"><div class="k">Weight</div><div class="v">~80 kg</div>
+        <div class="s">Works wet ground a tractor can't touch</div></div>
+      <div class="spec"><div class="k">Cutting deck</div><div class="v">700 mm · 3 blades</div>
+        <div class="s">Cut height set to your spec — held continuously</div></div>
+      <div class="spec"><div class="k">Power</div><div class="v">48 V · ~860 W average</div>
+        <div class="s">About 4.2 kWh over a working day</div></div>
+      <div class="spec"><div class="k">Charging</div><div class="v">230 V · 32 A single-phase</div>
+        <div class="s">Standard LT supply. With a low-voltage substation roughly every 7 MW, a dock is never far.</div></div>
+      <div class="spec"><div class="k">Sensing &amp; data</div><div class="v">LiDAR · RTK · thermal + visual</div>
+        <div class="s">Edge processing on board. Your site network has no external link, so we bring our own backhaul.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 THE NUMBERS — fault dwell time -->
+<section class="dark" style="padding-top:0">
+  <div class="wrap rv">
+    <div class="eyebrow">The thermal cadence</div>
+    <h2>How long does a failing joint sit there?</h2>
+    <p class="lede">A fault that starts at a random moment waits, on average, half the gap between inspections.
+       <b style="color:#f4f6f5;font-weight:560">Every input below is yours to set</b> — put in your own cadence and
+       your own fault count:</p>
+
+    <div class="livechip" id="livetag"><i></i>Facility basis: OpenElectricity · Avonlie (AVLSF)</div>
+
+    <div class="calc">
+      <div>
+        <div class="bignum" id="rBig">0</div>
+        <div class="bigsub">fault-days avoided per year · <b>on the figures you set</b></div>
+        <div class="subrow">
+          <div class="cell"><div class="n" id="rNow">0 days</div><div class="k">Average wait today</div></div>
+          <div class="cell"><div class="n" id="rApt">0 days</div><div class="k">Average wait at Aptics cadence</div></div>
+          <div class="cell"><div class="n" id="rWorst">0 days</div><div class="k">Worst-case wait today</div></div>
+          <div class="cell"><div class="n" id="rSeason">0</div><div class="k">Avoided inside Oct–Mar</div></div>
+        </div>
+      </div>
+      <div class="sl">
+        <label for="sInt">Thermal inspections per year today</label><output id="oInt">1 a year</output>
+        <input id="sInt" type="range" min="1" max="12" step="1" value="1">
+        <label for="sApt">Aptics thermal passes per year</label><output id="oApt">2 a year</output>
+        <input id="sApt" type="range" min="1" max="24" step="1" value="2">
+        <label for="sN">Developing hot joints per year</label><output id="oN">10</output>
+        <input id="sN" type="range" min="0" max="60" step="1" value="10">
+      </div>
+    </div>
+
+    <p class="prov">This is arithmetic, not a forecast. Average wait is half the inspection gap; fault-days are
+       faults per year × average wait; the Oct–Mar figure applies the share of the year inside the NSW default
+       bush fire danger period (182 of 365 days) and assumes faults are spread evenly through the year. The
+       <b>one-a-year default</b> reflects the annual in-house drone flights described to us on 24&nbsp;August, the
+       <b>two-passes-a-year default</b> is a starting position for the pilot rather than a commitment, and the <b>fault count is a placeholder</b> — not an Aptics estimate
+       and not a statement about Avonlie. Set them to your own figures and the result becomes yours.</p>
+  </div>
+</section>
+
+<!-- 04 THE OBLIGATION -->
+<section>
+  <div class="wrap rv">
+    <div class="eyebrow">The obligation</div>
+    <h2>In New South Wales, the duty sits with the occupier of the land.</h2>
+    <p class="lede">Under the <b>Rural Fires Act 1997 (NSW)</b>, owners and occupiers of land have a duty to
+       prevent bush fires on their land and to minimise the danger of one spreading from it. The statutory
+       <b>bush fire danger period runs 1&nbsp;October to 31&nbsp;March</b> by default, and the Commissioner can vary
+       it by local area.</p>
+
+    <p class="pull">What “enough” looks like at Avonlie is set by your own consent conditions and emergency
+       management plan — including the <em>150&nbsp;mm grass-height target</em> you described. We have not seen
+       those documents, and the way to stand behind any standard is <em>to show what was cut, where, and when</em>.
+       Every pass leaves that record automatically.</p>
+  </div>
+</section>
+
+<!-- 05 THE PORTFOLIO -->
+<section>
+  <div class="wrap rv" style="padding-top:0">
+    <div class="eyebrow">The portfolio</div>
+    <h2>One operating farm. One coming into operation.</h2>
+    <p class="lede">What is configured at Avonlie — geofences, thermal baselines, cut height, reporting — is the
+       operating standard for the next site. And the next site is at the point where thermal evidence is worth the
+       most.</p>
+
+    <div class="folio">
+      <div class="frow hd"><div>Site</div><div>MW</div><div>State</div><div></div></div>
+      <div class="frow this"><div class="nm">Avonlie</div><div class="no">254 MWp DC</div><div class="st">NSW</div>
+        <div class="st">This proposal · operating, near Narrandera · NEM region NSW1 · facility code AVLSF</div></div>
+      <div class="frow"><div class="nm">Broadsound — solar</div><div class="no">376 MW</div><div class="st">QLD</div>
+        <div class="st">Reported by your team as commissioning now (published figure; DC basis not confirmed). A baseline thermal scan at handover finds poor
+          connections and installation defects while they are still the builder's to fix.</div></div>
+      <div class="frow"><div class="nm">Broadsound — storage</div><div class="no">180</div><div class="st">QLD</div>
+        <div class="st">Co-located two-hour battery</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 THE PATH -->
+<section style="background:var(--white)">
+  <div class="wrap rv">
+    <div class="eyebrow">The path</div>
+    <h2>One 5&nbsp;MWp block. Then the standard travels.</h2>
+
+    <div class="steps">
+      <div class="step"><div class="n">01</div><h3>Pilot block · A$20,000</h3>
+        <p>One 5&nbsp;MWp (DC) block, <b style="color:var(--ink);font-weight:600">five days on site for A$20,000</b>: block
+           mapping, vegetation held at your height, and a thermal and visual scan of every string. Block and dates
+           agreed with Ben and the site team.</p></div>
+      <div class="step"><div class="n">02</div><h3>What you get</h3>
+        <p>Access to the Aptics console and the findings, a dated cut-height record, and a like-for-like
+           baseline against how the block is managed and inspected today.</p></div>
+      <div class="step"><div class="n">03</div><h3>Broadsound</h3>
+        <p>A separate, earlier-stage conversation: a full-site thermal baseline at handover, for the QLD site team
+           to consider.</p></div>
+    </div>
+
+    <p class="pull">Three things would let us size the pilot properly:
+       <em>which block you would nominate</em>; <em>the minimum clearance under the trackers at maximum tilt</em>,
+       which sets the chassis envelope; and <em>whether the 150&nbsp;mm height is insurer-, regulator- or internally
+       set</em>, which tells us how the record needs to be kept.</p>
+  </div>
+</section>
+
+<!-- CLOSE -->
+<section class="close" id="close">
+  <div class="wrap rv">
+    <h2>Let's pick a block before we put anything on the grass.</h2>
+    <p class="when">Ben — thank you for the time on the phone. A short call is enough to agree which block, which
+       dates and what you want the findings to feed into. We would also welcome the site visit Matt suggested.
+       <b>Phillip Wagstaff, Aptics.</b></p>
+    <a class="cta" href="mailto:phillip@aptics.com?subject=Avonlie%20Solar%20Farm%20%E2%80%94%205%20MWp%20pilot">Email Phillip directly</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Prepared for Ben Hubatka, Site Manager, Avonlie Solar Farm (Iberdrola Australia). Facility basis from
+       OpenElectricity (Avonlie, facility code AVLSF, unit AVLSF1, NEM region NSW1, registered capacity 254&nbsp;MWp DC, with a 190&nbsp;MW AC export rating;
+       owner figure 245&nbsp;MWp DC); module count and EPC contractor (Beon Energy Solutions) from
+       published reporting; site area, grass-height target and inspection practice as described by Iberdrola site staff
+       on 24&nbsp;August 2026 and not independently verified. Regulatory reference: Rural Fires Act 1997 (NSW) — owner and
+       occupier duty, and the default bush fire danger period of 1&nbsp;October to 31&nbsp;March (NSW Rural Fire
+       Service). Broadsound capacities from published project announcements; its status is as reported to us by
+       Iberdrola. The calculator is illustrative arithmetic on inputs you set. Imagery is from Aptics deployments
+       elsewhere and is illustrative; we have not yet visited Avonlie. Pilot price is A$20,000 for five days on site. Block sizes and site capacity are stated in MWp (DC). Figures on this page are for discussion
+       and are not an offer. Aptics Pte. Ltd. · Confidential &amp; without prejudice.</p>
+  </div>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id);};
+
+  /* ---------- access gate — key auto-fills from ?key= ---------- */
+  var SALT="25df002eb5e7bbac";
+  var KEYHASH="395963e2ea1aeb2fda179e40dfa42782e59b3d71d9208b879b3dcade8d54d0ee";
+  var DOMAINS=["iberdrola.com.au","aptics.com"];
+  var KEY_B64="QVZMU0YtMDkyNg==";
+
+  function sha256(str){
+    return crypto.subtle.digest("SHA-256",new TextEncoder().encode(str)).then(function(buf){
+      return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,"0");}).join("");
+    });
+  }
+  function unlock(){
+    $("gate").classList.add("hidden");
+    $("page").classList.remove("hidden");
+    try{sessionStorage.setItem("aptics_avlsf_unlocked","1");}catch(e){}
+    boot();
+  }
+  function tryKey(key,silent){
+    return sha256(SALT+"|"+String(key||"").trim().toUpperCase()).then(function(h){
+      if(h===KEYHASH){unlock();return true;}
+      if(!silent){$("g-msg").textContent="That key doesn't match. Check your invitation link.";}
+      return false;
+    });
+  }
+  function autofill(){
+    var email=($("g-email").value||"").trim().toLowerCase();
+    var dom=email.split("@")[1];
+    if(dom&&DOMAINS.indexOf(dom)>=0){
+      $("g-key").value=atob(KEY_B64);
+      var m=$("g-msg"); m.style.color="#8b9793";
+      m.textContent="Access code filled from your invitation.";
+    }
+  }
+  var urlKey=new URLSearchParams(location.search).get("key");
+  if(urlKey){ $("g-key").value=urlKey.toUpperCase(); }
+  var already=false; try{already=sessionStorage.getItem("aptics_avlsf_unlocked")==="1";}catch(e){}
+  if(already){ unlock(); }
+  else if(urlKey){ tryKey(urlKey,true); }
+  ["input","change","blur"].forEach(function(ev){$("g-email").addEventListener(ev,autofill);});
+  $("g-go").addEventListener("click",function(){tryKey($("g-key").value,false);});
+  $("g-key").addEventListener("keydown",function(e){if(e.key==="Enter")tryKey($("g-key").value,false);});
+
+  /* ---------- page ---------- */
+  var booted=false;
+  function boot(){
+    if(booted)return; booted=true;
+    var fmt=function(n,d){d=d||0;return n.toLocaleString("en-AU",{minimumFractionDigits:d,maximumFractionDigits:d});};
+
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{threshold:.14});
+    document.querySelectorAll(".rv").forEach(function(el){io.observe(el);});
+
+    var nav=$("nav");
+    addEventListener("scroll",function(){nav.classList.toggle("on",scrollY>innerHeight*.6);},{passive:true});
+
+    var co=new IntersectionObserver(function(es){es.forEach(function(e){
+      if(!e.isIntersecting)return; co.unobserve(e.target);
+      var el=e.target,end=+el.dataset.count,suf=el.dataset.suffix||"",dec=(end%1!==0)?2:0,t0=performance.now();
+      (function tick(t){
+        var p=Math.min((t-t0)/1400,1),ease=1-Math.pow(1-p,3);
+        el.textContent=fmt(end*ease,dec)+suf;
+        if(p<1)requestAnimationFrame(tick);
+      })(t0);
+    });},{threshold:.5});
+    document.querySelectorAll("[data-count]").forEach(function(el){co.observe(el);});
+
+    /* ----- fault-dwell engine ----- */
+    var SEASON=182/365; /* 1 Oct–31 Mar = 182 days */
+    var cur={avoid:0,now:0,apt:0,worst:0,season:0};
+    function target(){
+      var gap=365/Math.max(1,+$("sInt").value),apt=365/Math.max(1,+$("sApt").value),n=+$("sN").value;
+      $("oInt").textContent=fmt(+$("sInt").value)+" a year";
+      $("oApt").textContent=fmt(+$("sApt").value)+" a year";
+      $("oN").textContent=fmt(n);
+      var dNow=gap/2,dApt=Math.min(apt,gap)/2;
+      var avoid=Math.max(0,n*(dNow-dApt));
+      return{avoid:avoid,now:dNow,apt:dApt,worst:gap,season:avoid*SEASON};
+    }
+    function render(v){
+      $("rBig").textContent=fmt(Math.round(v.avoid));
+      $("rNow").textContent=fmt(v.now,1).replace(/\.0$/,"")+" days";
+      $("rApt").textContent=fmt(v.apt,1).replace(/\.0$/,"")+" days";
+      $("rWorst").textContent=fmt(Math.round(v.worst))+" days";
+      $("rSeason").textContent=fmt(Math.round(v.season))+" fault-days";
+    }
+    var anim=null;
+    function tween(){
+      var to=target(),from={},k; for(k in cur)from[k]=cur[k];
+      var t0=performance.now();
+      if(anim)cancelAnimationFrame(anim);
+      (function step(t){
+        var p=Math.min((t-t0)/420,1),e=1-Math.pow(1-p,3),v={};
+        for(var k in to)v[k]=from[k]+(to[k]-from[k])*e;
+        render(v);cur=v;
+        if(p<1)anim=requestAnimationFrame(step);
+      })(t0);
+    }
+    ["sInt","sApt","sN"].forEach(function(id){$(id).addEventListener("input",tween);});
+    render(cur=target());
+
+    /* ----- OpenElectricity live attempt (graceful fallback) ----- */
+    fetch("https://data.openelectricity.org.au/v3/stats/au/NEM/AVLSF/power/7d.json")
+      .then(function(r){if(!r.ok)throw 0;return r.json();})
+      .then(function(j){
+        var s=(j.data||[]).filter(function(d){return d.data_type==="power";})[0];
+        if(!s||!s.history)throw 0;
+        var arr=s.history.data.filter(function(v){return v!=null;});
+        if(!arr.length)throw 0;
+        var avg=arr.reduce(function(a,b){return a+b;},0)/arr.length;
+        $("livetag").innerHTML='<i></i>Live · Avonlie averaged '+fmt(avg,0)+' MW over the last 7 days · OpenElectricity';
+      })
+      .catch(function(){});
+  }
+})();
+</script>
+</body>
+</html>
